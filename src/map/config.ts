@@ -56,7 +56,7 @@ const SATELLITE_STYLE: StyleSpecification = {
 
 // OpenFreeMap: nemokami OSM vektoriniai tile'ai, API rakto nereikia.
 export const BASEMAPS: Basemap[] = [
-  { id: 'dark', label: 'Tamsus', style: 'https://tiles.openfreemap.org/styles/dark', buildingColor: '#334155', boundaryColor: '#38bdf8' },
+  { id: 'dark', label: 'Tamsus', style: 'https://tiles.openfreemap.org/styles/dark', buildingColor: '#334155', boundaryColor: '#e2e8f0' },
   { id: 'light', label: 'Šviesus', style: 'https://tiles.openfreemap.org/styles/positron', buildingColor: '#cbd5e1', boundaryColor: '#2563eb' },
   { id: 'color', label: 'Spalvotas', style: 'https://tiles.openfreemap.org/styles/liberty', buildingColor: '#d6d3d1', boundaryColor: '#2563eb' },
   { id: 'satellite', label: 'Palydovas', style: SATELLITE_STYLE, buildingColor: '#94a3b8', boundaryColor: '#facc15', maxZoom: SATELLITE_MAX_ZOOM },

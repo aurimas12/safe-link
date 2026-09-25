@@ -1,4 +1,4 @@
-import { Box, Crosshair, Map as MapIcon } from 'lucide-react'
+import { Box, Crosshair, Loader2, Map as MapIcon, TriangleAlert } from 'lucide-react'
 import * as maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
@@ -17,6 +17,17 @@ import {
   type BasemapId,
 } from '../map/config'
 import { DEFAULT_VISIBLE_ESO, ESO_DATA_URL, ESO_GROUPS, ESO_SOURCE, describeEsoFeature } from '../map/eso'
+import {
+  DEFAULT_VISIBLE_WATER,
+  WATER_GROUPS,
+  WATER_GROUP_IDS,
+  WATER_SOURCES,
+  WATER_VECTOR_MIN_ZOOM,
+  WATER_VECTOR_SOURCES,
+  describeWaterFeature,
+  loadWaterGroup,
+  vectorSourceId,
+} from '../map/water'
 import LayerMenu from './LayerMenu'
 
 // Vite perkelia maplibre-gl į .vite/deps, kur jo worker failo nėra – nurodom sukompiliuotą worker'į patys.
@@ -25,15 +36,17 @@ maplibregl.setWorkerUrl(workerUrl)
 const BUILDINGS_3D = 'buildings-3d'
 const FEZ_SOURCE = 'fez-boundary'
 
-const LAYER_GROUPS = ESO_GROUPS
-// Plotai → linijos → taškai → etiketės: taškai (pastotės) turi būti virš kabelių, kad juos būtų galima paspausti.
-const TYPE_ORDER: Record<string, number> = { fill: 0, line: 1, circle: 2, symbol: 3 }
+// Vanduo po ESO – elektros tinklas lieka viršuje.
+const LAYER_GROUPS = [...WATER_GROUPS, ...ESO_GROUPS]
+// Rastrai → plotai → linijos → taškai → etiketės: taškai (pastotės, hidrantai) turi būti virš linijų, kad juos būtų
+// galima paspausti.
+const TYPE_ORDER: Record<string, number> = { raster: -1, fill: 0, line: 1, circle: 2, symbol: 3 }
 const ORDERED_LAYERS = LAYER_GROUPS.flatMap((group) => group.layers.map((layer) => ({ group, layer }))).sort(
   (a, b) => (TYPE_ORDER[a.layer.type] ?? 0) - (TYPE_ORDER[b.layer.type] ?? 0),
 )
-// Sluoksniai, ant kurių paspaudus rodomas objekto aprašas (etiketės nepaspaudžiamos).
+// Sluoksniai, ant kurių paspaudus rodomas objekto aprašas (etiketės ir rastrai nepaspaudžiami).
 const CLICKABLE_LAYERS = LAYER_GROUPS.flatMap((g) => g.layers)
-  .filter((l) => l.type !== 'symbol')
+  .filter((l) => l.type !== 'symbol' && l.type !== 'raster')
   .map((l) => l.id)
 
 function getBasemap(id: BasemapId): Basemap {
@@ -82,6 +95,7 @@ function addOverlays(
   })
 
   map.addSource(ESO_SOURCE, { type: 'geojson', data: ESO_DATA_URL })
+  for (const [id, source] of WATER_SOURCES) map.addSource(id, source)
   for (const { group, layer } of ORDERED_LAYERS) {
     map.addLayer({ ...layer, layout: { ...layer.layout, visibility: visibleGroups.has(group.id) ? 'visible' : 'none' } })
   }
@@ -89,7 +103,8 @@ function addOverlays(
 
 // Popup turinys kuriamas per DOM (textContent), kad duomenų tekstas niekada nebūtų interpretuojamas kaip HTML.
 function popupContent(feature: maplibregl.MapGeoJSONFeature): HTMLElement {
-  const { title, rows } = describeEsoFeature(feature.properties)
+  const isWater = WATER_VECTOR_SOURCES.has(feature.source)
+  const { title, rows } = isWater ? describeWaterFeature(feature.properties) : describeEsoFeature(feature.properties)
   const root = document.createElement('div')
   root.className = 'infra-popup'
   const h = document.createElement('div')
@@ -107,7 +122,9 @@ function popupContent(feature: maplibregl.MapGeoJSONFeature): HTMLElement {
   root.append(dl)
   const note = document.createElement('div')
   note.className = 'infra-popup-note'
-  note.textContent = 'Šaltinis: AB „Energijos skirstymo operatorius“ (atviri duomenys)'
+  note.textContent = isWater
+    ? 'Šaltinis: AB „Klaipėdos vanduo“ (vieši duomenys, realiu laiku)'
+    : 'Šaltinis: AB „Energijos skirstymo operatorius“ (atviri duomenys)'
   root.append(note)
   return root
 }
@@ -118,8 +135,11 @@ export default function MapContainer() {
   const [is3d, setIs3d] = useState(false)
   const [basemapId, setBasemapId] = useState<BasemapId>(DEFAULT_BASEMAP)
   const [visibleGroups, setVisibleGroups] = useState<Set<string>>(
-    () => new Set(DEFAULT_VISIBLE_ESO),
+    () => new Set([...DEFAULT_VISIBLE_ESO, ...DEFAULT_VISIBLE_WATER]),
   )
+  const [waterLoading, setWaterLoading] = useState(0)
+  const [waterError, setWaterError] = useState<string | null>(null)
+  const refreshWaterRef = useRef<() => void>(() => {})
   // 'style.load' klausytojas sukuriamas vieną kartą, todėl dabartines reikšmes skaito per ref.
   const stateRef = useRef({ is3d, basemapId, visibleGroups })
   useEffect(() => {
@@ -153,8 +173,45 @@ export default function MapContainer() {
     })
     map.on('mouseenter', CLICKABLE_LAYERS, () => (map.getCanvas().style.cursor = 'pointer'))
     map.on('mouseleave', CLICKABLE_LAYERS, () => (map.getCanvas().style.cursor = ''))
+
+    // Vandens tinklų objektai kraunami iš „Klaipėdos vanduo“ tik matomai žemėlapio daliai, priartinus.
+    const waterRequests = new Map<string, AbortController>()
+    let waterTimer: ReturnType<typeof setTimeout> | undefined
+    const refreshWater = () => {
+      clearTimeout(waterTimer)
+      waterTimer = setTimeout(() => {
+        if (map.getZoom() < WATER_VECTOR_MIN_ZOOM) return
+        const b = map.getBounds()
+        const bbox: [number, number, number, number] = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()]
+        for (const id of WATER_GROUP_IDS) {
+          if (!stateRef.current.visibleGroups.has(id)) continue
+          waterRequests.get(id)?.abort()
+          const request = new AbortController()
+          waterRequests.set(id, request)
+          setWaterLoading((n) => n + 1)
+          loadWaterGroup(id, bbox, request.signal)
+            .then((data) => {
+              ;(map.getSource(vectorSourceId(id)) as maplibregl.GeoJSONSource | undefined)?.setData(data)
+              setWaterError(null)
+            })
+            .catch((err: unknown) => {
+              if (err instanceof DOMException && err.name === 'AbortError') return
+              console.warn(err)
+              setWaterError('Nepavyko gauti „Klaipėdos vanduo“ duomenų')
+            })
+            .finally(() => setWaterLoading((n) => n - 1))
+        }
+      }, 250)
+    }
+    refreshWaterRef.current = refreshWater
+    map.on('moveend', refreshWater)
+    // Po setStyle() vektoriniai šaltiniai tušti – užkraunam iš naujo.
+    map.on('style.load', refreshWater)
+
     mapRef.current = map
     return () => {
+      clearTimeout(waterTimer)
+      for (const request of waterRequests.values()) request.abort()
       map.remove()
       mapRef.current = null
     }
@@ -188,6 +245,8 @@ export default function MapContainer() {
         }
       }
     }
+    // Įjungtam vandens sluoksniui – užkraunam matomos dalies objektus.
+    refreshWaterRef.current()
   }, [visibleGroups])
 
   const toggleGroup = (id: string) =>
@@ -236,6 +295,21 @@ export default function MapContainer() {
         </div>
         <LayerMenu visible={visibleGroups} onToggle={toggleGroup} />
       </div>
+      {(waterLoading > 0 || waterError) && (
+        <div className="absolute bottom-10 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-md border border-slate-700 bg-panel/90 px-3 py-1.5 text-sm text-slate-200 backdrop-blur">
+          {waterError ? (
+            <>
+              <TriangleAlert size={16} className="text-status-risk" />
+              {waterError}
+            </>
+          ) : (
+            <>
+              <Loader2 size={16} className="animate-spin" />
+              Kraunami vandens tinklai…
+            </>
+          )}
+        </div>
+      )}
     </div>
   )
 }

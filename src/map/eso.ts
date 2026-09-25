@@ -1,21 +1,13 @@
-import type { ExpressionSpecification, LayerSpecification, SymbolLayerSpecification } from 'maplibre-gl'
+import type { ExpressionSpecification, SymbolLayerSpecification } from 'maplibre-gl'
 import esoGridUrl from '../data/eso_grid.json?url'
 import esoMeta from '../data/eso_grid.meta.json'
+import type { LayerGroup } from './layers'
 
 // Oficialus AB „Energijos skirstymo operatorius“ elektros tinklas visai Klaipėdai (atviri duomenys, data.gov.lt #3455).
 // Parsiunčiamas su `npm run fetch:eso`; ~14 MB failas kraunamas atskirai, ne per JS paketą.
 export const ESO_SOURCE = 'eso'
 export const ESO_DATA_URL = esoGridUrl
 export const ESO_META = esoMeta
-
-// Meniu punktas: vienas jungiklis gali valdyti kelis žemėlapio sluoksnius (pvz. taškai + etiketės).
-export interface LayerGroup {
-  id: string
-  label: string
-  color: string
-  count: number
-  layers: LayerSpecification[]
-}
 
 // ESO tinklas – rožinių atspalvių šeima, kad nesimaišytų su rizikos būsenų spalvomis.
 const COLORS = {

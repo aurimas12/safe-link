@@ -1,6 +1,8 @@
 import { ChevronDown, Layers } from 'lucide-react'
 import { useState } from 'react'
-import { ESO_GROUPS, ESO_META, type LayerGroup } from '../map/eso'
+import { ESO_GROUPS, ESO_META } from '../map/eso'
+import { WATER_GROUPS, WATER_VECTOR_MIN_ZOOM } from '../map/water'
+import type { LayerGroup } from '../map/layers'
 
 interface Props {
   visible: Set<string>
@@ -25,7 +27,7 @@ function Section({ title, groups, visible, onToggle }: { title: string; groups: 
               />
               <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: g.color }} />
               <span>{g.label}</span>
-              <span className="ml-auto text-xs text-slate-400">{g.count}</span>
+              {g.count != null && <span className="ml-auto text-xs text-slate-400">{g.count}</span>}
             </label>
           </li>
         ))}
@@ -47,9 +49,10 @@ export default function LayerMenu({ visible, onToggle }: Props) {
       {open && (
         <div className="border-t border-slate-700 px-3 py-2">
           <Section title="ESO – oficialus elektros tinklas" groups={ESO_GROUPS} visible={visible} onToggle={onToggle} />
+          <Section title="Klaipėdos vanduo" groups={WATER_GROUPS} visible={visible} onToggle={onToggle} />
           <p className="border-t border-slate-700 pt-2 text-xs leading-snug text-slate-400">
-            Šaltinis: ESO atviri duomenys (data.gov.lt), {esoDate}, visa Klaipėda. Projektuojamas tinklas
-            nerodomas.
+            ESO: atviri duomenys (data.gov.lt), {esoDate}, visa Klaipėda; projektuojamas tinklas nerodomas.
+            Klaipėdos vanduo: vieši duomenys realiu laiku; objektai paspaudžiami priartinus (z{WATER_VECTOR_MIN_ZOOM}+).
           </p>
         </div>
       )}
