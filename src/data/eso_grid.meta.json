@@ -1,0 +1,21 @@
+{
+  "source": "AB „Energijos skirstymo operatorius“, VšĮ SSVA (geoportal.lt), atviri duomenys data.gov.lt #3455",
+  "bbox": [
+    21.08,
+    55.62,
+    21.3,
+    55.76
+  ],
+  "fetched_at": "2026-09-25T18:59:44.406Z",
+  "counts": {
+    "substation": 1028,
+    "substation_important": 0,
+    "substation_hv": 13,
+    "cable_10": 7849,
+    "cable_35": 0,
+    "cable_04": 20515,
+    "overhead_35": 0,
+    "overhead_10": 169,
+    "overhead_04": 1028
+  }
+}
