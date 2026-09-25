@@ -17,7 +17,6 @@ import {
   type BasemapId,
 } from '../map/config'
 import { DEFAULT_VISIBLE_ESO, ESO_DATA_URL, ESO_GROUPS, ESO_SOURCE, describeEsoFeature } from '../map/eso'
-import { DEFAULT_VISIBLE_INFRA, INFRA_DATA, INFRA_GROUPS, INFRA_SOURCE, describeFeature } from '../map/infrastructure'
 import LayerMenu from './LayerMenu'
 
 // Vite perkelia maplibre-gl į .vite/deps, kur jo worker failo nėra – nurodom sukompiliuotą worker'į patys.
@@ -26,8 +25,7 @@ maplibregl.setWorkerUrl(workerUrl)
 const BUILDINGS_3D = 'buildings-3d'
 const FEZ_SOURCE = 'fez-boundary'
 
-// ESO po OSM – kad OSM objektai liktų viršuje ir būtų paspaudžiami.
-const LAYER_GROUPS = [...ESO_GROUPS, ...INFRA_GROUPS]
+const LAYER_GROUPS = ESO_GROUPS
 // Plotai → linijos → taškai → etiketės: taškai (pastotės) turi būti virš kabelių, kad juos būtų galima paspausti.
 const TYPE_ORDER: Record<string, number> = { fill: 0, line: 1, circle: 2, symbol: 3 }
 const ORDERED_LAYERS = LAYER_GROUPS.flatMap((group) => group.layers.map((layer) => ({ group, layer }))).sort(
@@ -84,7 +82,6 @@ function addOverlays(
   })
 
   map.addSource(ESO_SOURCE, { type: 'geojson', data: ESO_DATA_URL })
-  map.addSource(INFRA_SOURCE, { type: 'geojson', data: INFRA_DATA })
   for (const { group, layer } of ORDERED_LAYERS) {
     map.addLayer({ ...layer, layout: { ...layer.layout, visibility: visibleGroups.has(group.id) ? 'visible' : 'none' } })
   }
@@ -92,8 +89,7 @@ function addOverlays(
 
 // Popup turinys kuriamas per DOM (textContent), kad duomenų tekstas niekada nebūtų interpretuojamas kaip HTML.
 function popupContent(feature: maplibregl.MapGeoJSONFeature): HTMLElement {
-  const isEso = feature.source === ESO_SOURCE
-  const { title, rows } = isEso ? describeEsoFeature(feature.properties) : describeFeature(feature.properties)
+  const { title, rows } = describeEsoFeature(feature.properties)
   const root = document.createElement('div')
   root.className = 'infra-popup'
   const h = document.createElement('div')
@@ -109,19 +105,10 @@ function popupContent(feature: maplibregl.MapGeoJSONFeature): HTMLElement {
     dl.append(dt, dd)
   }
   root.append(dl)
-  if (isEso) {
-    const note = document.createElement('div')
-    note.className = 'infra-popup-note'
-    note.textContent = 'Šaltinis: AB „Energijos skirstymo operatorius“ (atviri duomenys)'
-    root.append(note)
-  } else {
-    const a = document.createElement('a')
-    a.href = describeFeature(feature.properties).osmUrl
-    a.target = '_blank'
-    a.rel = 'noopener noreferrer'
-    a.textContent = 'Žiūrėti OpenStreetMap ↗'
-    root.append(a)
-  }
+  const note = document.createElement('div')
+  note.className = 'infra-popup-note'
+  note.textContent = 'Šaltinis: AB „Energijos skirstymo operatorius“ (atviri duomenys)'
+  root.append(note)
   return root
 }
 
@@ -131,7 +118,7 @@ export default function MapContainer() {
   const [is3d, setIs3d] = useState(false)
   const [basemapId, setBasemapId] = useState<BasemapId>(DEFAULT_BASEMAP)
   const [visibleGroups, setVisibleGroups] = useState<Set<string>>(
-    () => new Set([...DEFAULT_VISIBLE_ESO, ...DEFAULT_VISIBLE_INFRA]),
+    () => new Set(DEFAULT_VISIBLE_ESO),
   )
   // 'style.load' klausytojas sukuriamas vieną kartą, todėl dabartines reikšmes skaito per ref.
   const stateRef = useRef({ is3d, basemapId, visibleGroups })

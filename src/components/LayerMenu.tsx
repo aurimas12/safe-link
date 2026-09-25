@@ -1,17 +1,15 @@
 import { ChevronDown, Layers } from 'lucide-react'
 import { useState } from 'react'
-import { ESO_GROUPS, ESO_META } from '../map/eso'
-import { INFRA_DATA, INFRA_GROUPS, type InfraGroup } from '../map/infrastructure'
+import { ESO_GROUPS, ESO_META, type LayerGroup } from '../map/eso'
 
 interface Props {
   visible: Set<string>
   onToggle: (id: string) => void
 }
 
-const osmDate = INFRA_DATA.metadata.osm_timestamp?.slice(0, 10) ?? INFRA_DATA.metadata.fetched_at.slice(0, 10)
 const esoDate = ESO_META.fetched_at.slice(0, 10)
 
-function Section({ title, groups, visible, onToggle }: { title: string; groups: InfraGroup[] } & Props) {
+function Section({ title, groups, visible, onToggle }: { title: string; groups: LayerGroup[] } & Props) {
   return (
     <>
       <div className="mb-1 mt-1 text-xs uppercase tracking-wide text-slate-400">{title}</div>
@@ -49,10 +47,9 @@ export default function LayerMenu({ visible, onToggle }: Props) {
       {open && (
         <div className="border-t border-slate-700 px-3 py-2">
           <Section title="ESO – oficialus elektros tinklas" groups={ESO_GROUPS} visible={visible} onToggle={onToggle} />
-          <Section title="OpenStreetMap" groups={INFRA_GROUPS} visible={visible} onToggle={onToggle} />
           <p className="border-t border-slate-700 pt-2 text-xs leading-snug text-slate-400">
-            ESO: atviri duomenys (data.gov.lt), {esoDate}, visa Klaipėda; projektuojamas tinklas nerodomas. OSM:{' '}
-            {osmDate}. Vandentiekio tinklų viešai nėra.
+            Šaltinis: ESO atviri duomenys (data.gov.lt), {esoDate}, visa Klaipėda. Projektuojamas tinklas
+            nerodomas.
           </p>
         </div>
       )}
