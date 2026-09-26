@@ -33,7 +33,7 @@ const LABEL_PAINT: SymbolLayerSpecification['paint'] = { 'text-color': '#ffffff'
 export const ESO_GROUPS: LayerGroup[] = [
   {
     id: 'eso_hv',
-    label: 'Pastotės 110/35 kV',
+    label: 'Substations 110/35 kV',
     color: COLORS.hv,
     count: count('substation_hv', 'substation_important'),
     layers: [
@@ -66,7 +66,7 @@ export const ESO_GROUPS: LayerGroup[] = [
   },
   {
     id: 'eso_substation',
-    label: 'Transformatorinės ir skirstomieji punktai',
+    label: 'Transformers and switching stations',
     color: COLORS.substation,
     count: count('substation'),
     layers: [
@@ -96,7 +96,7 @@ export const ESO_GROUPS: LayerGroup[] = [
   },
   {
     id: 'eso_10',
-    label: '10 kV kabeliai ir oro linijos',
+    label: '10 kV cables and overhead lines',
     color: COLORS.kv10,
     count: count('cable_10', 'overhead_10', 'cable_35', 'overhead_35'),
     layers: [
@@ -127,7 +127,7 @@ export const ESO_GROUPS: LayerGroup[] = [
   },
   {
     id: 'eso_04',
-    label: '0,4 kV kabeliai ir oro linijos',
+    label: '0.4 kV cables and overhead lines',
     color: COLORS.kv04,
     count: count('cable_04', 'overhead_04'),
     layers: [
@@ -164,17 +164,18 @@ export const DEFAULT_VISIBLE_ESO = ESO_GROUPS.map((g) => g.id)
 const HIDDEN_ATTRS = new Set(['layer', 'layer_name', 'Shape'])
 const ATTR_LABELS: Record<string, string> = {
   OBJECTID: 'ESO ID',
-  PAVADINIMAS: 'Pavadinimas',
-  RUSIS: 'Rūšis',
-  ITAMPA: 'Įtampa, kV',
-  Padalinys: 'Padalinys',
-  Subtype: 'Potipis',
-  Shape_Length: 'Ilgis, m',
-  'FAZIU SKAICIUS': 'Fazių skaičius',
+  PAVADINIMAS: 'Name',
+  RUSIS: 'Kind',
+  ITAMPA: 'Voltage, kV',
+  Padalinys: 'Division',
+  Subtype: 'Subtype',
+  Shape_Length: 'Length, m',
+  'FAZIU SKAICIUS': 'Phases',
+  'Atlikimo metodas': 'Survey method',
 }
 
 export function describeEsoFeature(p: Record<string, unknown>): { title: string; rows: [string, string][] } {
-  const rows: [string, string][] = [['Sluoksnis', String(p.layer_name)]]
+  const rows: [string, string][] = [['ESO layer', String(p.layer_name)]]
   for (const [k, v] of Object.entries(p)) {
     if (HIDDEN_ATTRS.has(k) || v == null || v === '') continue
     rows.push([ATTR_LABELS[k] ?? k, String(v)])

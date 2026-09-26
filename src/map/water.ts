@@ -40,10 +40,10 @@ const H = 'Hidrantai_ViesamNaudojimui'
 
 // Vandens tinklams – žydri/rudi/žalsvai mėlyni atspalviai, kad nesimaišytų su ESO (rožiniai) ir rizikos spalvomis.
 const DEFS: WaterGroupDef[] = [
-  { id: 'water_supply', label: 'Vandentiekis', color: '#38bdf8', kind: 'line', sources: [{ service: V, layerId: 5 }] },
+  { id: 'water_supply', label: 'Water supply', color: '#38bdf8', kind: 'line', sources: [{ service: V, layerId: 5 }] },
   {
     id: 'water_sewer',
-    label: 'Buitinės nuotekos',
+    label: 'Sewage',
     color: '#d6a77a',
     kind: 'line',
     dashedLayerIds: [6],
@@ -54,7 +54,7 @@ const DEFS: WaterGroupDef[] = [
   },
   {
     id: 'water_storm',
-    label: 'Lietaus nuotekos',
+    label: 'Stormwater',
     color: '#2dd4bf',
     kind: 'line',
     dashedLayerIds: [5],
@@ -63,8 +63,8 @@ const DEFS: WaterGroupDef[] = [
       { service: LK, layerId: 5 },
     ],
   },
-  { id: 'water_hydrants', label: 'Hidrantai', color: '#f0f9ff', kind: 'point', sources: [{ service: H, layerId: 0 }] },
-  { id: 'water_valves', label: 'Sklendės', color: '#7dd3fc', kind: 'point', sources: [{ service: V, layerId: 3 }] },
+  { id: 'water_hydrants', label: 'Hydrants', color: '#f0f9ff', kind: 'point', sources: [{ service: H, layerId: 0 }] },
+  { id: 'water_valves', label: 'Valves', color: '#7dd3fc', kind: 'point', sources: [{ service: V, layerId: 3 }] },
 ]
 
 const rgba = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).concat(255)
@@ -239,27 +239,27 @@ export async function loadWaterGroup(
 }
 
 const SUBLAYER_LABELS: Record<string, string> = {
-  [`${V}/5`]: 'Vandentiekio vamzdynas',
-  [`${V}/3`]: 'Sklendė',
-  [`${H}/0`]: 'Hidrantas',
-  [`${FK}/5`]: 'Buitinių nuotekų vamzdynas',
-  [`${FK}/6`]: 'Slėginis buitinių nuotekų vamzdynas',
-  [`${LK}/4`]: 'Lietaus nuotekų vamzdynas',
-  [`${LK}/5`]: 'Slėginis lietaus nuotekų vamzdynas',
+  [`${V}/5`]: 'Water supply pipe',
+  [`${V}/3`]: 'Valve',
+  [`${H}/0`]: 'Hydrant',
+  [`${FK}/5`]: 'Sewage pipe',
+  [`${FK}/6`]: 'Pressure sewage pipe',
+  [`${LK}/4`]: 'Stormwater pipe',
+  [`${LK}/5`]: 'Pressure stormwater pipe',
 }
 
 // Lauko vardas → „Klaipėdos vanduo“ paslaugoje nurodytas pavadinimas (alias).
 const FIELD_LABELS: Record<string, string> = {
   OBJECTID: 'ID',
-  Diameter: 'Diametras, mm',
-  MaterialType: 'Medžiaga',
-  Owner: 'Savininkas',
-  AssemblerId: 'Eksploatuoja',
-  Class: 'Klasė',
-  Kategorijos: 'Kategorija',
-  Label: 'Numeris',
-  ID_Kameros: 'Nr. kameros',
-  'geom.STLength()': 'Ilgis, m',
+  Diameter: 'Diameter, mm',
+  MaterialType: 'Material',
+  Owner: 'Owner',
+  AssemblerId: 'Operated by',
+  Class: 'Class',
+  Kategorijos: 'Category',
+  Label: 'Number',
+  ID_Kameros: 'Chamber no.',
+  'geom.STLength()': 'Length, m',
 }
 
 export function describeWaterFeature(p: Record<string, unknown>): { title: string; rows: [string, string][] } {

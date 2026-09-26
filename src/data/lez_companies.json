@@ -1,0 +1,776 @@
+{
+ "metadata": {
+  "fetched_at": "2026-09-25T21:10:41.565Z",
+  "sources": {
+   "employees": "https://atvira.sodra.lt/imones/downloads/2026/monthly-2026.csv.zip",
+   "registry": "https://get.data.gov.lt/datasets/gov/rc/jar/iregistruoti/JuridinisAsmuo",
+   "finance": "https://get.data.gov.lt/datasets/gov/rc/jar/pelno_ataskaitos/PelnoAtaskaita"
+  },
+  "note": "Figures are for the whole company (not only its FEZ site). Matched by name and Klaipėda municipality."
+ },
+ "companies": {
+  "\"Baltic TS Group\"": {
+   "confidence": "neaiškus",
+   "sodra": null,
+   "finance": null,
+   "candidates": []
+  },
+  "ANI Plast": {
+   "confidence": "tikslus",
+   "sodra": {
+    "code": "302460242",
+    "name": "UAB \"ANI PLAST\"",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "22.24.00",
+    "activity": "Plastikinių statybos dirbinių gamyba",
+    "month": "202607",
+    "employees": 66,
+    "avg_wage_eur": 1918.07
+   },
+   "finance": {
+    "revenue_eur": 4156987,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-04-30"
+   },
+   "candidates": [
+    {
+     "code": "302460242",
+     "name": "UAB \"ANI PLAST\"",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "22.24.00",
+     "activity": "Plastikinių statybos dirbinių gamyba",
+     "month": "202607",
+     "employees": 66,
+     "avg_wage_eur": 1918.07
+    }
+   ]
+  },
+  "Ad Rem LEZ": {
+   "confidence": "tikslus",
+   "sodra": {
+    "code": "300656317",
+    "name": "UAB \"AD REM LEZ\"",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "52.10.00",
+    "activity": "Sandėliavimas ir saugojimas",
+    "month": "202607",
+    "employees": 95,
+    "avg_wage_eur": 2482.6
+   },
+   "finance": {
+    "revenue_eur": 7879697,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-05-20"
+   },
+   "candidates": [
+    {
+     "code": "300656317",
+     "name": "UAB \"AD REM LEZ\"",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "52.10.00",
+     "activity": "Sandėliavimas ir saugojimas",
+     "month": "202607",
+     "employees": 95,
+     "avg_wage_eur": 2482.6
+    }
+   ]
+  },
+  "Albright Lietuva": {
+   "confidence": "tikslus",
+   "sodra": {
+    "code": "300847468",
+    "name": "UAB ALBRIGHT LIETUVA",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "27.12.00",
+    "activity": "Elektros skirstomosios ir valdymo įrangos gamyba",
+    "month": "202607",
+    "employees": 155,
+    "avg_wage_eur": 2219.82
+   },
+   "finance": {
+    "revenue_eur": 27331991,
+    "period_from": "2024-10-01",
+    "period_to": "2025-09-30",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2026-02-05"
+   },
+   "candidates": [
+    {
+     "code": "300847468",
+     "name": "UAB ALBRIGHT LIETUVA",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "27.12.00",
+     "activity": "Elektros skirstomosios ir valdymo įrangos gamyba",
+     "month": "202607",
+     "employees": 155,
+     "avg_wage_eur": 2219.82
+    }
+   ]
+  },
+  "Baltic Comri Technologies": {
+   "confidence": "tikslus",
+   "sodra": {
+    "code": "303006488",
+    "name": "UAB \"BALTIC COMRI TECHNOLOGIES\"",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "27.90.00",
+    "activity": "Kitos elektros įrangos gamyba",
+    "month": "202607",
+    "employees": 133,
+    "avg_wage_eur": 1662.58
+   },
+   "finance": {
+    "revenue_eur": 2204802,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-07-03"
+   },
+   "candidates": [
+    {
+     "code": "303006488",
+     "name": "UAB \"BALTIC COMRI TECHNOLOGIES\"",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "27.90.00",
+     "activity": "Kitos elektros įrangos gamyba",
+     "month": "202607",
+     "employees": 133,
+     "avg_wage_eur": 1662.58
+    }
+   ]
+  },
+  "Be-Ge Baltic": {
+   "confidence": "tikslus",
+   "sodra": {
+    "code": "141195074",
+    "name": "BE-GE BALTIC, UAB",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "13.96.00",
+    "activity": "Kitų techninės ir pramoninės tekstilės gaminių ir dirbinių gamyba",
+    "month": "202607",
+    "employees": 89,
+    "avg_wage_eur": 2019.3
+   },
+   "finance": {
+    "revenue_eur": 4292853,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-06-05"
+   },
+   "candidates": [
+    {
+     "code": "141195074",
+     "name": "BE-GE BALTIC, UAB",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "13.96.00",
+     "activity": "Kitų techninės ir pramoninės tekstilės gaminių ir dirbinių gamyba",
+     "month": "202607",
+     "employees": 89,
+     "avg_wage_eur": 2019.3
+    }
+   ]
+  },
+  "Dancer": {
+   "confidence": "tikėtinas",
+   "sodra": {
+    "code": "305532387",
+    "name": "UAB \"DANCER MOBILITY\"",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "46.71.00",
+    "activity": "Variklinių transporto priemonių didmeninė prekyba",
+    "month": "202607",
+    "employees": 1,
+    "avg_wage_eur": null
+   },
+   "finance": null,
+   "candidates": [
+    {
+     "code": "305532387",
+     "name": "UAB \"DANCER MOBILITY\"",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "46.71.00",
+     "activity": "Variklinių transporto priemonių didmeninė prekyba",
+     "month": "202607",
+     "employees": 1,
+     "avg_wage_eur": null
+    }
+   ]
+  },
+  "Espersen": {
+   "confidence": "tikėtinas",
+   "sodra": {
+    "code": "163679793",
+    "name": "UAB ESPERSEN LIETUVA",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "10.20.00",
+    "activity": "Žuvų, vėžiagyvių ir moliuskų perdirbimas ir konservavimas",
+    "month": "202605",
+    "employees": 1,
+    "avg_wage_eur": null
+   },
+   "finance": {
+    "revenue_eur": 51747000,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-06-03"
+   },
+   "candidates": [
+    {
+     "code": "163679793",
+     "name": "UAB ESPERSEN LIETUVA",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "10.20.00",
+     "activity": "Žuvų, vėžiagyvių ir moliuskų perdirbimas ir konservavimas",
+     "month": "202605",
+     "employees": 1,
+     "avg_wage_eur": null
+    }
+   ]
+  },
+  "Finegri": {
+   "confidence": "tikslus",
+   "sodra": {
+    "code": "305782615",
+    "name": "UAB FINEGRI",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "23.99.00",
+    "activity": "Kitų, niekur kitur nepriskirtų, nemetalo mineralinių produktų gamyba",
+    "month": "202607",
+    "employees": 8,
+    "avg_wage_eur": 4002.88
+   },
+   "finance": null,
+   "candidates": [
+    {
+     "code": "305782615",
+     "name": "UAB FINEGRI",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "23.99.00",
+     "activity": "Kitų, niekur kitur nepriskirtų, nemetalo mineralinių produktų gamyba",
+     "month": "202607",
+     "employees": 8,
+     "avg_wage_eur": 4002.88
+    }
+   ]
+  },
+  "Glassbel Baltic": {
+   "confidence": "tikslus",
+   "sodra": {
+    "code": "300630728",
+    "name": "GLASSBEL BALTIC, UAB",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "23.12.00",
+    "activity": "Plokščiojo stiklo pjaustymas ir apdorojimas",
+    "month": "202607",
+    "employees": 113,
+    "avg_wage_eur": 2843.05
+   },
+   "finance": {
+    "revenue_eur": 26198564,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-05-05"
+   },
+   "candidates": [
+    {
+     "code": "300630728",
+     "name": "GLASSBEL BALTIC, UAB",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "23.12.00",
+     "activity": "Plokščiojo stiklo pjaustymas ir apdorojimas",
+     "month": "202607",
+     "employees": 113,
+     "avg_wage_eur": 2843.05
+    }
+   ]
+  },
+  "Klaipėdos Omniva logistikos centras": {
+   "confidence": "neaiškus",
+   "sodra": null,
+   "finance": null,
+   "candidates": []
+  },
+  "Lindstrom": {
+   "confidence": "kitur",
+   "sodra": {
+    "code": "111618732",
+    "name": "UŽDAROJI AKCINĖ BENDROVĖ \"LINDSTROM\"",
+    "municipality": "Vilniaus m. sav.",
+    "evrk": "77.22.10",
+    "activity": "Tekstilės dirbinių, drabužių ir avalynės nuoma",
+    "month": "202607",
+    "employees": 131,
+    "avg_wage_eur": 2966.52
+   },
+   "finance": {
+    "revenue_eur": 17603987,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-05-26"
+   },
+   "candidates": [
+    {
+     "code": "111618732",
+     "name": "UŽDAROJI AKCINĖ BENDROVĖ \"LINDSTROM\"",
+     "municipality": "Vilniaus m. sav.",
+     "evrk": "77.22.10",
+     "activity": "Tekstilės dirbinių, drabužių ir avalynės nuoma",
+     "month": "202607",
+     "employees": 131,
+     "avg_wage_eur": 2966.52
+    }
+   ]
+  },
+  "Metalo valdymo projektai": {
+   "confidence": "neaiškus",
+   "sodra": null,
+   "finance": null,
+   "candidates": []
+  },
+  "PKC Group Lithuania": {
+   "confidence": "kitur",
+   "sodra": {
+    "code": "303297652",
+    "name": "PKC GROUP LITHUANIA UAB",
+    "municipality": "Panevėžio r. sav.",
+    "evrk": "27.32.00",
+    "activity": "Kitų elektronikos bei elektros laidų ir kabelių gamyba",
+    "month": "202607",
+    "employees": 1457,
+    "avg_wage_eur": 1588.71
+   },
+   "finance": {
+    "revenue_eur": 42829100,
+    "period_from": "2024-04-01",
+    "period_to": "2025-03-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-07-11"
+   },
+   "candidates": [
+    {
+     "code": "303297652",
+     "name": "PKC GROUP LITHUANIA UAB",
+     "municipality": "Panevėžio r. sav.",
+     "evrk": "27.32.00",
+     "activity": "Kitų elektronikos bei elektros laidų ir kabelių gamyba",
+     "month": "202607",
+     "employees": 1457,
+     "avg_wage_eur": 1588.71
+    }
+   ]
+  },
+  "PRL Klaipėda": {
+   "confidence": "neaiškus",
+   "sodra": null,
+   "finance": null,
+   "candidates": []
+  },
+  "Pack Klaipėda": {
+   "confidence": "tikslus",
+   "sodra": {
+    "code": "142098386",
+    "name": "UAB PACK KLAIPĖDA",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "22.22.00",
+    "activity": "Plastikinių pakuočių gamyba",
+    "month": "202607",
+    "employees": 98,
+    "avg_wage_eur": 2596.37
+   },
+   "finance": {
+    "revenue_eur": 13722092,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-05-15"
+   },
+   "candidates": [
+    {
+     "code": "142098386",
+     "name": "UAB PACK KLAIPĖDA",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "22.22.00",
+     "activity": "Plastikinių pakuočių gamyba",
+     "month": "202607",
+     "employees": 98,
+     "avg_wage_eur": 2596.37
+    }
+   ]
+  },
+  "Padel Spot - padelio arena": {
+   "confidence": "neaiškus",
+   "sodra": null,
+   "finance": null,
+   "candidates": []
+  },
+  "Philip Morris Lietuva": {
+   "confidence": "tikslus",
+   "sodra": {
+    "code": "110506132",
+    "name": "UAB PHILIP MORRIS LIETUVA",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "12.00.00",
+    "activity": "Tabako gaminių gamyba",
+    "month": "202607",
+    "employees": 495,
+    "avg_wage_eur": 4940.23
+   },
+   "finance": {
+    "revenue_eur": 89108252,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-05-16"
+   },
+   "candidates": [
+    {
+     "code": "110506132",
+     "name": "UAB PHILIP MORRIS LIETUVA",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "12.00.00",
+     "activity": "Tabako gaminių gamyba",
+     "month": "202607",
+     "employees": 495,
+     "avg_wage_eur": 4940.23
+    }
+   ]
+  },
+  "Raben Lietuva - Klaipėda": {
+   "confidence": "kitur",
+   "sodra": {
+    "code": "300027413",
+    "name": "UŽDAROJI AKCINĖ BENDROVĖ \"RABEN LIETUVA\"",
+    "municipality": "Vilniaus m. sav.",
+    "evrk": "52.25.00",
+    "activity": "Logistikos paslaugų veikla",
+    "month": "202607",
+    "employees": 131,
+    "avg_wage_eur": 3196.85
+   },
+   "finance": {
+    "revenue_eur": 23436352,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-04-22"
+   },
+   "candidates": [
+    {
+     "code": "300027413",
+     "name": "UŽDAROJI AKCINĖ BENDROVĖ \"RABEN LIETUVA\"",
+     "municipality": "Vilniaus m. sav.",
+     "evrk": "52.25.00",
+     "activity": "Logistikos paslaugų veikla",
+     "month": "202607",
+     "employees": 131,
+     "avg_wage_eur": 3196.85
+    }
+   ]
+  },
+  "Ratola": {
+   "confidence": "tikslus",
+   "sodra": {
+    "code": "211790590",
+    "name": "UAB \"RATOLA\"",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "47.82.00",
+    "activity": "Variklinių transporto priemonių atsarginių dalių ir pagalbinių reikmenų mažmeninė prekyba",
+    "month": "202607",
+    "employees": 7,
+    "avg_wage_eur": 2318.33
+   },
+   "finance": {
+    "revenue_eur": 1962360,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-05-08"
+   },
+   "candidates": [
+    {
+     "code": "211790590",
+     "name": "UAB \"RATOLA\"",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "47.82.00",
+     "activity": "Variklinių transporto priemonių atsarginių dalių ir pagalbinių reikmenų mažmeninė prekyba",
+     "month": "202607",
+     "employees": 7,
+     "avg_wage_eur": 2318.33
+    }
+   ]
+  },
+  "Rehau": {
+   "confidence": "tikėtinas",
+   "sodra": {
+    "code": "305565070",
+    "name": "REHAU PRODUCTION LT UAB",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "22.24.00",
+    "activity": "Plastikinių statybos dirbinių gamyba",
+    "month": "202607",
+    "employees": 113,
+    "avg_wage_eur": 2930.11
+   },
+   "finance": {
+    "revenue_eur": 28409718,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-03-31"
+   },
+   "candidates": [
+    {
+     "code": "111613614",
+     "name": "UŽDAROJI AKCINĖ BENDROVĖ REHAU",
+     "municipality": "Vilniaus m. sav.",
+     "evrk": "46.90.00",
+     "activity": "Nespecializuota didmeninė prekyba",
+     "month": "202607",
+     "employees": 20,
+     "avg_wage_eur": 4443.89
+    },
+    {
+     "code": "305565070",
+     "name": "REHAU PRODUCTION LT UAB",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "22.24.00",
+     "activity": "Plastikinių statybos dirbinių gamyba",
+     "month": "202607",
+     "employees": 113,
+     "avg_wage_eur": 2930.11
+    }
+   ]
+  },
+  "Retal Baltic": {
+   "confidence": "tikėtinas",
+   "sodra": {
+    "code": "126297271",
+    "name": "UAB \"RETAL BALTIC FILMS\"",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "22.22.00",
+    "activity": "Plastikinių pakuočių gamyba",
+    "month": "202607",
+    "employees": 209,
+    "avg_wage_eur": 3529.93
+   },
+   "finance": {
+    "revenue_eur": 76456650,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-09-21"
+   },
+   "candidates": [
+    {
+     "code": "126297271",
+     "name": "UAB \"RETAL BALTIC FILMS\"",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "22.22.00",
+     "activity": "Plastikinių pakuočių gamyba",
+     "month": "202607",
+     "employees": 209,
+     "avg_wage_eur": 3529.93
+    }
+   ]
+  },
+  "Roteksas": {
+   "confidence": "tikslus",
+   "sodra": {
+    "code": "300656477",
+    "name": "UAB ROTEKSAS",
+    "municipality": "Klaipėdos r. sav.",
+    "evrk": "28.93.00",
+    "activity": "Maisto, gėrimų ir tabako apdorojimo mašinų gamyba",
+    "month": "202607",
+    "employees": 40,
+    "avg_wage_eur": 2733.62
+   },
+   "finance": {
+    "revenue_eur": 11065130,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-05-05"
+   },
+   "candidates": [
+    {
+     "code": "300656477",
+     "name": "UAB ROTEKSAS",
+     "municipality": "Klaipėdos r. sav.",
+     "evrk": "28.93.00",
+     "activity": "Maisto, gėrimų ir tabako apdorojimo mašinų gamyba",
+     "month": "202607",
+     "employees": 40,
+     "avg_wage_eur": 2733.62
+    },
+    {
+     "code": "305728254",
+     "name": "UAB \"ROTEKSAS LEZ\"",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "25.11.00",
+     "activity": "Metalo konstrukcijų ir jų dalių gamyba",
+     "month": "202607",
+     "employees": 6,
+     "avg_wage_eur": 2454.82
+    }
+   ]
+  },
+  "Skuba": {
+   "confidence": "neaiškus",
+   "sodra": null,
+   "finance": null,
+   "candidates": [
+    {
+     "code": "121559428",
+     "name": "UŽDAROJI AKCINĖ BENDROVĖ \"SKUBA\"",
+     "municipality": "Vilniaus m. sav.",
+     "evrk": "46.72.00",
+     "activity": "Variklinių transporto priemonių dalių ir pagalbinių reikmenų didmeninė prekyba",
+     "month": "202607",
+     "employees": 209,
+     "avg_wage_eur": 3084.78
+    },
+    {
+     "code": "305638604",
+     "name": "UAB SKUBA LIETUVA",
+     "municipality": "Vilniaus m. sav.",
+     "evrk": "46.72.00",
+     "activity": "Variklinių transporto priemonių dalių ir pagalbinių reikmenų didmeninė prekyba",
+     "month": "202607",
+     "employees": 324,
+     "avg_wage_eur": 3316.71
+    },
+    {
+     "code": "306176218",
+     "name": "UAB SKUBA TRADE",
+     "municipality": "Vilniaus m. sav.",
+     "evrk": "46.72.00",
+     "activity": "Variklinių transporto priemonių dalių ir pagalbinių reikmenų didmeninė prekyba",
+     "month": "202607",
+     "employees": 3,
+     "avg_wage_eur": null
+    }
+   ]
+  },
+  "UAB \"Wistra Cargo Control\"": {
+   "confidence": "tikslus",
+   "sodra": {
+    "code": "301171142",
+    "name": "\"WISTRA CARGO CONTROL\", UAB",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "46.84.00",
+    "activity": "Metalinių dirbinių, vandentiekio ir šildymo įrangos bei reikmenų didmeninė prekyba",
+    "month": "202607",
+    "employees": 65,
+    "avg_wage_eur": 1743.57
+   },
+   "finance": {
+    "revenue_eur": 6840324,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-07-11"
+   },
+   "candidates": [
+    {
+     "code": "301171142",
+     "name": "\"WISTRA CARGO CONTROL\", UAB",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "46.84.00",
+     "activity": "Metalinių dirbinių, vandentiekio ir šildymo įrangos bei reikmenų didmeninė prekyba",
+     "month": "202607",
+     "employees": 65,
+     "avg_wage_eur": 1743.57
+    }
+   ]
+  },
+  "UAB „Elme Metall Klaipėda“": {
+   "confidence": "tikslus",
+   "sodra": {
+    "code": "305287105",
+    "name": "ELME METALL KLAIPĖDA, UAB",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "25.51.00",
+    "activity": "Metalų dengimas",
+    "month": "202607",
+    "employees": 1,
+    "avg_wage_eur": null
+   },
+   "finance": {
+    "revenue_eur": 465094,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-05-30"
+   },
+   "candidates": [
+    {
+     "code": "305287105",
+     "name": "ELME METALL KLAIPĖDA, UAB",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "25.51.00",
+     "activity": "Metalų dengimas",
+     "month": "202607",
+     "employees": 1,
+     "avg_wage_eur": null
+    }
+   ]
+  },
+  "Vesvela": {
+   "confidence": "neaiškus",
+   "sodra": null,
+   "finance": null,
+   "candidates": []
+  },
+  "Vingės logistika": {
+   "confidence": "tikslus",
+   "sodra": {
+    "code": "300617360",
+    "name": "UAB VINGĖS LOGISTIKA",
+    "municipality": "Klaipėdos m. sav.",
+    "evrk": "52.10.00",
+    "activity": "Sandėliavimas ir saugojimas",
+    "month": "202607",
+    "employees": 83,
+    "avg_wage_eur": 2907.86
+   },
+   "finance": {
+    "revenue_eur": 3805637,
+    "period_from": "2024-01-01",
+    "period_to": "2024-12-31",
+    "statement": "PELNO (NUOSTOLIŲ) ATASKAITA",
+    "registered": "2025-05-27"
+   },
+   "candidates": [
+    {
+     "code": "300099373",
+     "name": "UAB \"VINGĖS TRANSSPHERE LOGISTIKA\"",
+     "municipality": "Trakų r. sav.",
+     "evrk": "52.10.00",
+     "activity": "Sandėliavimas ir saugojimas",
+     "month": "202607",
+     "employees": 69,
+     "avg_wage_eur": 1819.16
+    },
+    {
+     "code": "300617360",
+     "name": "UAB VINGĖS LOGISTIKA",
+     "municipality": "Klaipėdos m. sav.",
+     "evrk": "52.10.00",
+     "activity": "Sandėliavimas ir saugojimas",
+     "month": "202607",
+     "employees": 83,
+     "avg_wage_eur": 2907.86
+    }
+   ]
+  }
+ }
+}

@@ -8,7 +8,13 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "fetch:eso": "node scripts/fetch-eso.mjs"
+    "fetch:eso": "node scripts/fetch-eso.mjs",
+    "fetch:buildings": "node scripts/fetch-buildings.mjs",
+    "fetch:water": "node scripts/fetch-water.mjs",
+    "build:graph": "node scripts/build-graph.mjs",
+    "fetch:companies": "node scripts/fetch-companies.mjs",
+    "fetch:emergency": "node scripts/fetch-emergency.mjs",
+    "fetch:area-buildings": "node scripts/fetch-area-buildings.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
