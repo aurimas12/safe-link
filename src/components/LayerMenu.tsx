@@ -1,6 +1,9 @@
 import { ChevronDown, Layers, Route } from 'lucide-react'
 import { useState } from 'react'
-import { AREA_GROUP, BUILDINGS_GROUP } from '../map/buildings'
+import { AREA_GROUP, BUILDINGS_GROUP, formatEur } from '../map/buildings'
+import { KV_META } from '../stats/model'
+import { ZONES_GROUP, formatMetric, metricValue, zoneSwatch, type Zone, type ZoneMetric } from '../map/zones'
+import ZoneMetricSelect from './ZoneMetricSelect'
 import { ESO_GROUPS, ESO_META } from '../map/eso'
 import { SHELTERS_GROUP, STATIONS_GROUP } from '../map/emergency'
 import { GRAPH_GROUP } from '../map/graph'
@@ -14,6 +17,41 @@ interface SectionProps {
 interface Props extends SectionProps {
   showRoutes: boolean
   onToggleRoutes: () => void
+  zones: Zone[]
+  zoneMetric: ZoneMetric
+  onZoneMetric: (m: ZoneMetric) => void
+}
+
+// Legend for the supply zones: colour = importance for the chosen metric, zones listed by that metric.
+function ZonesLegend({ zones, metric, onMetric }: { zones: Zone[]; metric: ZoneMetric; onMetric: (m: ZoneMetric) => void }) {
+  if (!zones.length) return <p className="px-1 pb-2 text-xs text-slate-400">Loading the dependency graph…</p>
+  const max = Math.max(...zones.map((z) => metricValue(z, metric)))
+  const water = metric === 'water' || metric === 'waterUnplanned' || metric === 'customers'
+  return (
+    <div className="mb-2 rounded border border-slate-700 bg-slate-900/40 p-2">
+      <ZoneMetricSelect value={metric} onChange={onMetric} />
+      <ul className="mt-1.5 space-y-0.5 text-xs">
+        {[...zones]
+          .sort((a, b) => metricValue(b, metric) - metricValue(a, metric))
+          .map((z) => {
+            const v = metricValue(z, metric)
+            return (
+              <li key={z.id} className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: zoneSwatch(v, max), border: `1px solid ${v > 0 ? '#93c5fd' : '#64748b'}` }} />
+                <span className="flex-1 truncate">{z.name}</span>
+                <span className="tabular-nums text-slate-300">{formatMetric(v, metric, formatEur)}</span>
+              </li>
+            )
+          })}
+      </ul>
+      <p className="mt-1 text-[11px] text-slate-500">
+        {water
+          ? `Recorded since ${KV_META.data_from?.slice(0, 10)} (history is being collected). Stronger blue = more; grey outline = none. `
+          : 'Stronger blue = more important. '}
+        Click a zone for details.
+      </p>
+    </div>
+  )
 }
 
 const esoDate = ESO_META.fetched_at.slice(0, 10)
@@ -43,7 +81,7 @@ function Section({ title, groups, visible, onToggle }: { title: string; groups: 
   )
 }
 
-export default function LayerMenu({ visible, onToggle, showRoutes, onToggleRoutes }: Props) {
+export default function LayerMenu({ visible, onToggle, showRoutes, onToggleRoutes, zones, zoneMetric, onZoneMetric }: Props) {
   const [open, setOpen] = useState(true)
 
   return (
@@ -55,7 +93,8 @@ export default function LayerMenu({ visible, onToggle, showRoutes, onToggleRoute
       </button>
       {open && (
         <div className="border-t border-slate-700 px-3 py-2">
-          <Section title="Klaipėda FEZ" groups={[BUILDINGS_GROUP, AREA_GROUP, GRAPH_GROUP]} visible={visible} onToggle={onToggle} />
+          <Section title="Klaipėda FEZ" groups={[BUILDINGS_GROUP, AREA_GROUP, GRAPH_GROUP, ZONES_GROUP]} visible={visible} onToggle={onToggle} />
+          {visible.has(ZONES_GROUP.id) && <ZonesLegend zones={zones} metric={zoneMetric} onMetric={onZoneMetric} />}
           <label
             className="-mt-1 mb-2 flex cursor-pointer items-center gap-2 rounded px-1 py-1 hover:bg-slate-700/40"
             title="When you click a building, substation or valve, highlight the cables and pipes it is connected by"

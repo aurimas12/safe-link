@@ -19,3 +19,34 @@ body,
   color: #e2e8f0;
   font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
+
+/* Thin dark scrollbars for panels and tables (the default light ones stand out on the dark UI). */
+/* Firefox: standard properties. WebKit/Blink (Safari, Chrome) use the pseudo-elements below – setting the
+   standard properties there as well makes Safari fall back to its default light scrollbar. */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #334155 transparent;
+  }
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Scrollable tables: the scrollbar gets its own gutter instead of covering the last column. */
+.table-scroll {
+  overflow: auto;
+  scrollbar-gutter: stable;
+  padding-right: 6px;
+}

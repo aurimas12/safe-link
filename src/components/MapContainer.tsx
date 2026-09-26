@@ -1,9 +1,9 @@
-import { Box, Crosshair, Loader2, Map as MapIcon, Siren, TriangleAlert, X } from 'lucide-react'
+import { BarChart3, Box, Crosshair, Loader2, Map as MapIcon, Siren, TriangleAlert, X } from 'lucide-react'
 import { bbox } from '@turf/turf'
 import * as maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import {
   BASEMAPS,
   DEFAULT_BASEMAP,
@@ -82,7 +82,10 @@ import {
 } from '../map/incident'
 import type { Sector } from '../map/responsibility'
 import { NEXT, newReport, statusChange, type LogEntry, type Report } from '../map/workflow'
+import { ZONES_GROUP, ZONES_SOURCE, supplyZones, zonesData, type Zone, type ZoneMetric } from '../map/zones'
+import { formatEur } from '../map/buildings'
 import CommLog from './CommLog'
+import StatsView from './StatsView'
 import IncidentPanel from './IncidentPanel'
 import LayerMenu from './LayerMenu'
 
@@ -94,7 +97,7 @@ const FEZ_SOURCE = 'fez-boundary'
 const BUILDING_SOURCES = new Set([BUILDINGS_SOURCE, AREA_SOURCE])
 
 // Buildings at the bottom, water under ESO – the power grid stays on top.
-const LAYER_GROUPS = [AREA_GROUP, BUILDINGS_GROUP, GRAPH_GROUP, ...WATER_GROUPS, ...ESO_GROUPS, SHELTERS_GROUP, STATIONS_GROUP]
+const LAYER_GROUPS = [ZONES_GROUP, AREA_GROUP, BUILDINGS_GROUP, GRAPH_GROUP, ...WATER_GROUPS, ...ESO_GROUPS, SHELTERS_GROUP, STATIONS_GROUP]
 // Rasters → fills → lines → points → labels: points (substations, hydrants) must stay above lines to be clickable.
 const TYPE_ORDER: Record<string, number> = { raster: -1, fill: 0, line: 1, circle: 2, symbol: 3 }
 const ORDERED_LAYERS = LAYER_GROUPS.flatMap((group) => group.layers.map((layer) => ({ group, layer }))).sort(
@@ -151,6 +154,7 @@ function addOverlays(map: maplibregl.Map, basemap: Basemap, is3d: boolean, visib
   map.addSource(SHELTERS_SOURCE, { type: 'geojson', data: SHELTERS_DATA })
   map.addSource(ESO_SOURCE, { type: 'geojson', data: ESO_DATA_URL })
   map.addSource(INCIDENT_SOURCE, { type: 'geojson', data: EMPTY })
+  map.addSource(ZONES_SOURCE, { type: 'geojson', data: EMPTY })
   for (const [id, source] of WATER_SOURCES) map.addSource(id, source)
   for (const { group, layer } of ORDERED_LAYERS) {
     map.addLayer({ ...layer, layout: { ...layer.layout, visibility: visibleGroups.has(group.id) ? 'visible' : 'none' } })
@@ -184,8 +188,32 @@ function graphNodeOf(feature: maplibregl.MapGeoJSONFeature): string | null {
 }
 
 // Info panel content for the clicked object (React renders text safely, no HTML interpretation).
-function describeFeature(feature: maplibregl.MapGeoJSONFeature, graph: Graph | null): FeatureInfo {
+function describeFeature(feature: maplibregl.MapGeoJSONFeature, graph: Graph | null, zones: Zone[]): FeatureInfo {
   const p = feature.properties
+  if (feature.source === ZONES_SOURCE) {
+    const z = zones.find((x) => x.id === p.zone)
+    const s = z?.summary
+    return {
+      title: `Supply zone · ${p.name}`,
+      rows: s
+        ? [
+            ['Fed by', `${p.name} substation (and the 10 kV network below it)`],
+            ['Buildings', `${s.lez} in the FEZ, ${s.other} outside`],
+            ['FEZ companies', s.companies.join(', ') || '—'],
+            ['Employees (matched)', s.employees ? String(s.employees) : '—'],
+            ['Revenue per hour', s.perHour ? `≈ ${formatEur(s.perHour)}` : '—'],
+            ['Outside the FEZ', s.purposes.slice(0, 5).map(([l, n]) => `${l} ${n}`).join(', ') || '—'],
+            [
+              'Water interruptions',
+              z.water.total
+                ? `${z.water.total} (${z.water.planned} planned, ${z.water.unplanned} unplanned), ${z.water.customers.toLocaleString('en-GB')} customers`
+                : 'none recorded',
+            ],
+          ]
+        : [],
+      source: 'Dependency graph from ESO network data (shortest cable routes; switch states unknown); Klaipėdos vanduo accidents layer',
+    }
+  }
   if (BUILDING_SOURCES.has(feature.source)) {
     const id = `building/${p.OBJECTID}`
     const building = describeBuilding(p, feature.source === BUILDINGS_SOURCE)
@@ -242,6 +270,13 @@ export default function MapContainer() {
   const clearSelectionRef = useRef<() => void>(() => {})
   const [graphError, setGraphError] = useState(false)
   const [graphReady, setGraphReady] = useState(false)
+  const [graph, setGraph] = useState<Graph | null>(null)
+  // Statistics view and supply-zone colouring.
+  const [view, setView] = useState<'map' | 'stats'>('map')
+  const [zoneMetric, setZoneMetric] = useState<ZoneMetric>('perHour')
+  const zones = useMemo(() => (graph ? supplyZones(graph) : []), [graph])
+  const zonesRef = useRef<{ zones: Zone[]; metric: ZoneMetric }>({ zones: [], metric: 'perHour' })
+  const applyZonesRef = useRef<() => void>(() => {})
   // Incident marker: placing mode (next map click sets it), position + radius, and its impact analysis.
   const [placing, setPlacing] = useState(false)
   const placingRef = useRef(false)
@@ -336,6 +371,7 @@ export default function MapContainer() {
         ;(map.getSource(GRAPH_SOURCE) as maplibregl.GeoJSONSource | undefined)?.setData(graphData(graph))
         applySelection()
         setGraphReady(true)
+        setGraph(graph)
       })
       .catch((err: unknown) => {
         console.warn(err)
@@ -357,6 +393,13 @@ export default function MapContainer() {
     }
     applyIncidentRef.current = applyIncident
     map.on('style.load', applyIncident)
+    // Supply zones (computed once the graph is loaded; re-applied after a basemap change).
+    const applyZones = () => {
+      const { zones, metric } = zonesRef.current
+      ;(map.getSource(ZONES_SOURCE) as maplibregl.GeoJSONSource | undefined)?.setData(zones.length ? zonesData(zones, metric) : EMPTY)
+    }
+    applyZonesRef.current = applyZones
+    map.on('style.load', applyZones)
 
     map.on('click', (e) => {
       // Placing mode: the click sets the incident location instead of selecting an object.
@@ -384,7 +427,7 @@ export default function MapContainer() {
       const feature =
         features.find((f) => f.layer.type === 'circle') ?? features.find((f) => BUILDING_SOURCES.has(f.source)) ?? features[0]
       // Empty spot – clear the selection.
-      setSelected(feature ? describeFeature(feature, stateRef.current.graph) : null)
+      setSelected(feature ? describeFeature(feature, stateRef.current.graph, zonesRef.current.zones) : null)
       // The right panel (w-80 + gaps ≈ 400 px) must not cover the clicked object – pan the map.
       const panelLeft = map.getCanvas().clientWidth - 400
       if (feature && e.point.x > panelLeft) map.panBy([e.point.x - panelLeft + 40, 0], { duration: 400 })
@@ -534,6 +577,11 @@ export default function MapContainer() {
     setIncidentCollapsed(false)
   }
 
+  useEffect(() => {
+    zonesRef.current = { zones, metric: zoneMetric }
+    applyZonesRef.current()
+  }, [zones, zoneMetric])
+
   const startPlacing = () => {
     const next = !placing
     placingRef.current = next
@@ -560,7 +608,22 @@ export default function MapContainer() {
   return (
     <div className="relative h-full w-full">
       <div ref={containerRef} className="h-full w-full" />
-      <div className="absolute left-3 top-3 flex flex-col items-start gap-2 pr-14">
+      {view === 'stats' && (
+        <div className="absolute inset-0 z-10 bg-bg/95 backdrop-blur-sm">
+          <StatsView
+            graph={graph}
+            zones={zones}
+            zoneMetric={zoneMetric}
+            onZoneMetric={setZoneMetric}
+            onShowZones={() => {
+              setVisibleGroups((prev) => new Set(prev).add(ZONES_GROUP.id))
+              setView('map')
+            }}
+            onClose={() => setView('map')}
+          />
+        </div>
+      )}
+      <div className="absolute left-3 top-3 z-20 flex flex-col items-start gap-2 pr-14">
         <div className="flex flex-wrap items-center gap-2">
           <button onClick={() => setIs3d((v) => !v)} className={control}>
             {is3d ? <MapIcon size={16} /> : <Box size={16} />}
@@ -569,6 +632,14 @@ export default function MapContainer() {
           <button onClick={recenter} className={control} title="Centre on the FEZ">
             <Crosshair size={16} />
             FEZ
+          </button>
+          <button
+            onClick={() => setView((v) => (v === 'stats' ? 'map' : 'stats'))}
+            className={view === 'stats' ? `${control} border-status-action bg-status-action text-white hover:bg-status-action` : control}
+            title="Incident statistics"
+          >
+            <BarChart3 size={16} />
+            Statistics
           </button>
           <button
             onClick={startPlacing}
@@ -590,12 +661,17 @@ export default function MapContainer() {
             ))}
           </div>
         </div>
-        <LayerMenu
-          visible={visibleGroups}
-          onToggle={toggleGroup}
-          showRoutes={showRoutes}
-          onToggleRoutes={() => setShowRoutes((v) => !v)}
-        />
+        {view === 'map' && (
+          <LayerMenu
+            visible={visibleGroups}
+            onToggle={toggleGroup}
+            showRoutes={showRoutes}
+            onToggleRoutes={() => setShowRoutes((v) => !v)}
+            zones={zones}
+            zoneMetric={zoneMetric}
+            onZoneMetric={setZoneMetric}
+          />
+        )}
       </div>
       <div className="absolute right-14 top-3 flex max-h-[calc(100%-5rem)] w-96 max-w-[calc(100vw-5rem)] flex-col gap-2">
       {incident && report && (

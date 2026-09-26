@@ -1,5 +1,5 @@
 .venv/
-vendor/
+# vendor/
 out/
 __pycache__/
 *.ipynb_checkpoints/
