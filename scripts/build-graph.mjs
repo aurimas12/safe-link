@@ -253,6 +253,8 @@ const deviceNode = (f) => ({
   name: f.properties.PAVADINIMAS,
   kind: f.properties.RUSIS,
   voltage_kv: f.properties.ITAMPA,
+  // ESO padalinys, atsakingas už objektą (pvz. „Klaipėdos regiono tinklas“).
+  unit: f.properties.Padalinys ?? null,
   coords: f.geometry.coordinates,
   source: 'ESO',
   ref: f.id,

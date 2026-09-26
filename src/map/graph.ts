@@ -14,6 +14,7 @@ export interface GraphNode {
   name: string | null
   kind?: string
   voltage_kv?: string
+  unit?: string | null
   lez?: boolean
   purpose?: string | null
   coords: [number, number]

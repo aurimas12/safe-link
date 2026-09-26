@@ -159,6 +159,12 @@ export function describeShelter(p: Record<string, unknown>): { title: string; ro
   return { title: String(x.pavadinimas ?? KIND_LABEL[s.kind]), rows }
 }
 
+// Fastest fire service arrival to a FEZ building (road network estimate).
+export function fireEta(buildingId: string): { station: string; minutes: number } | null {
+  const first = data.buildings[buildingId]?.fire[0]
+  return first ? { station: stationById.get(first.station)!.name, minutes: first.minutes } : null
+}
+
 // Pastato eilutės: kiek laiko važiuoja tarnybos, kur artimiausia priedanga.
 export function describeBuildingEmergency(buildingId: string): [string, string][] {
   const e = data.buildings[buildingId]

@@ -1,0 +1,95 @@
+{
+  "metadata": {
+    "note": "Responsible teams and contacts per incident sector. Only contacts verified on the organisations' official websites are filled in; each has its source and verification date. Company contacts are not public – fill them in `companies` (key = company name as shown on the map).",
+    "verified_at": "2026-09-26"
+  },
+  "sectors": {
+    "power": {
+      "label": "Electricity",
+      "types": ["Power outage", "Damaged cable or line", "Substation / transformer failure", "Fire at electrical equipment"],
+      "team": {
+        "name": "AB „Energijos skirstymo operatorius“ (ESO) – electricity supply disruptions",
+        "phone": "1852",
+        "phone_alt": "+370 660 01852",
+        "email": null,
+        "hours": null,
+        "web": "https://www.eso.lt/web/registruotisutrikima",
+        "source": "https://www.eso.lt/web/registruotisutrikima"
+      }
+    },
+    "gas": {
+      "label": "Gas",
+      "types": ["Gas leak", "Gas supply disruption"],
+      "team": {
+        "name": "ESO – gas emergency service",
+        "phone": "1804",
+        "phone_alt": null,
+        "email": null,
+        "hours": null,
+        "web": "https://www.eso.lt/web/registruotisutrikima",
+        "source": "https://www.eso.lt/web/registruotisutrikima"
+      }
+    },
+    "water": {
+      "label": "Water supply",
+      "types": ["Pipe burst / leak", "Low pressure or no water", "Water contamination", "Damaged hydrant or valve"],
+      "team": {
+        "name": "AB „Klaipėdos vanduo“ – failures and accidents",
+        "phone": "(8 46) 220220",
+        "phone_alt": "+370 46 220220",
+        "email": "gedimai@vanduo.lt",
+        "hours": "24/7",
+        "web": "https://www.vanduo.lt/naujienos/apie-ivykusi-gedima-ar-avarija-praneskite-operatyviau/",
+        "source": "https://www.vanduo.lt/naujienos/apie-ivykusi-gedima-ar-avarija-praneskite-operatyviau/"
+      }
+    },
+    "sewer": {
+      "label": "Sewage",
+      "types": ["Blockage / overflow", "Collapsed or damaged pipe", "Pumping station failure"],
+      "team": {
+        "name": "AB „Klaipėdos vanduo“ – failures and accidents",
+        "phone": "(8 46) 220220",
+        "phone_alt": "+370 46 220220",
+        "email": "gedimai@vanduo.lt",
+        "hours": "24/7",
+        "web": "https://www.vanduo.lt/naujienos/apie-ivykusi-gedima-ar-avarija-praneskite-operatyviau/",
+        "source": "https://www.vanduo.lt/naujienos/apie-ivykusi-gedima-ar-avarija-praneskite-operatyviau/"
+      }
+    },
+    "storm": {
+      "label": "Stormwater / flooding",
+      "types": ["Street flooding", "Blocked drain"],
+      "team": {
+        "name": "AB „Klaipėdos vanduo“ – failures and accidents",
+        "phone": "(8 46) 220220",
+        "phone_alt": "+370 46 220220",
+        "email": "gedimai@vanduo.lt",
+        "hours": "24/7",
+        "web": "https://www.vanduo.lt/naujienos/apie-ivykusi-gedima-ar-avarija-praneskite-operatyviau/",
+        "source": "https://www.vanduo.lt/naujienos/apie-ivykusi-gedima-ar-avarija-praneskite-operatyviau/"
+      }
+    },
+    "fire": {
+      "label": "Fire / chemical / explosion",
+      "types": ["Fire", "Chemical leak", "Explosion"],
+      "team": {
+        "name": "General emergency number (fire, rescue, ambulance, police)",
+        "phone": "112",
+        "phone_alt": null,
+        "email": null,
+        "hours": "24/7",
+        "web": "https://www.112.lt",
+        "source": "https://www.112.lt"
+      }
+    }
+  },
+  "coordination": {
+    "name": "JSC Klaipėda Free Economic Zone Management Company",
+    "phone": "+370 695 20269",
+    "email": "info@fez.lt",
+    "address": "Pramonės g. 31, Klaipėda LT-94103",
+    "web": "https://www.fez.lt/",
+    "source": "https://www.fez.lt/"
+  },
+  "companies": {}
+}

@@ -82,7 +82,26 @@ export const AFFECTED_LAYERS: Record<string, string> = {
   [BUILDINGS_SOURCE]: 'lez-buildings-affected',
   [AREA_SOURCE]: 'area-buildings-affected',
 }
+// Incident: buildings inside the danger zone (red) and those losing power through the cascade (orange).
+export const INCIDENT_DIRECT_LAYERS: Record<string, string> = {
+  [BUILDINGS_SOURCE]: 'lez-buildings-incident',
+  [AREA_SOURCE]: 'area-buildings-incident',
+}
+export const INCIDENT_CASCADE_LAYERS: Record<string, string> = {
+  [BUILDINGS_SOURCE]: 'lez-buildings-incident-cascade',
+  [AREA_SOURCE]: 'area-buildings-incident-cascade',
+}
+const fillLayer = (id: string, source: string, color: string, opacity: number): LayerSpecification => ({
+  id,
+  type: 'fill',
+  source,
+  filter: NONE,
+  paint: { 'fill-color': color, 'fill-opacity': opacity, 'fill-outline-color': color },
+})
+
 export const HIGHLIGHT_LAYERS: LayerSpecification[] = [
+  ...Object.entries(INCIDENT_CASCADE_LAYERS).map(([source, id]) => fillLayer(id, source, AFFECTED, 0.45)),
+  ...Object.entries(INCIDENT_DIRECT_LAYERS).map(([source, id]) => fillLayer(id, source, '#ef4444', 0.6)),
   ...Object.entries(AFFECTED_LAYERS).map(
     ([source, id]): LayerSpecification => ({
       id,
@@ -233,19 +252,37 @@ export function describeBuilding(p: Record<string, unknown>, isLez: boolean): { 
 // ---------------------------------------------------------------------------------------------
 // Influence summary for a set of affected buildings (graph ids "building/<OBJECTID>").
 
+// FEZ companies (registry-listed names) whose main building is among the given buildings.
+export function fezCompaniesIn(buildingIds: Iterable<string>): string[] {
+  const out = new Set<string>()
+  for (const id of buildingIds) {
+    const p = lezById.get(id)
+    if (!p) continue
+    for (const name of namesOf(osmOf(p), 'building')) if (name in COMPANIES) out.add(name)
+  }
+  return [...out]
+}
+
 const lezById = new Map(BUILDINGS_DATA.features.map((f) => [`building/${f.properties!.OBJECTID}`, f.properties!]))
 
-export function describeImpact(
+export interface ImpactSummary {
+  lez: number
+  other: number
+  // Surrounding buildings by purpose (English label, count), largest first.
+  purposes: [string, number][]
+  companies: string[]
+  // Only companies matched to their FEZ site (exact / likely) – not "registered elsewhere".
+  employees: number
+  perHour: number
+}
+
+export function impactSummary(
   impact: { lez: number; other: number; other_by_purpose: Record<string, number> },
-  affected: string[],
-): [string, string][] {
-  const rows: [string, string][] = [['Buildings depending on it', `${impact.lez} in the FEZ, ${impact.other} outside`]]
+  affected: Iterable<string>,
+): ImpactSummary {
   const purposes = Object.entries(impact.other_by_purpose)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-    .map(([code, n]) => `${purposeName(code) ?? (code === 'nežinoma' ? 'unknown' : code)} ${n}`)
-  if (purposes.length) rows.push(['Outside the FEZ', purposes.join(', ')])
-
+    .map(([code, n]): [string, number] => [purposeName(code) ?? (code === 'nežinoma' ? 'Unknown purpose' : code), n])
   const companies = new Set<string>()
   let employees = 0
   let perHour = 0
@@ -262,8 +299,21 @@ export function describeImpact(
       if (m!.finance) perHour += m!.finance.revenue_eur / 8760
     }
   }
-  if (companies.size) rows.push(['FEZ companies', [...companies].join(', ')])
-  if (employees) rows.push(['Employees (matched companies)', String(employees)])
-  if (perHour) rows.push(['Revenue at risk per hour', `≈ ${eur(perHour)}`])
+  return { lez: impact.lez, other: impact.other, purposes, companies: [...companies], employees, perHour }
+}
+
+export const formatEur = eur
+
+export function describeImpact(
+  impact: { lez: number; other: number; other_by_purpose: Record<string, number> },
+  affected: string[],
+  label = 'Buildings depending on it',
+): [string, string][] {
+  const s = impactSummary(impact, affected)
+  const rows: [string, string][] = [[label, `${s.lez} in the FEZ, ${s.other} outside`]]
+  if (s.purposes.length) rows.push(['Outside the FEZ', s.purposes.slice(0, 5).map(([l, n]) => `${l} ${n}`).join(', ')])
+  if (s.companies.length) rows.push(['FEZ companies', s.companies.join(', ')])
+  if (s.employees) rows.push(['Employees (matched companies)', String(s.employees)])
+  if (s.perHour) rows.push(['Revenue at risk per hour', `≈ ${eur(s.perHour)}`])
   return rows
 }
